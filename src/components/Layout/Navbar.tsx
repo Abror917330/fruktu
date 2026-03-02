@@ -76,7 +76,7 @@ export const Navbar = () => {
                       <MenuButton onClick={() => setView("contacts")} icon={<PhoneCall size={22} />} label="Контакты" />
                       
                       <div className="grid grid-cols-2 gap-3 pt-6">
-                        <SocialBtn href="https://wa.me" icon={<MessageCircle />} label="WhatsApp" color="bg-green-50 text-green-600 border-green-100" />
+                        <SocialBtn href="https://wa.me/996222398828" icon={<MessageCircle />} label="WhatsApp" color="bg-green-50 text-green-600 border-green-100" />
                         <SocialBtn href="https://instagram.com" icon={<Instagram />} label="Instagram" color="bg-pink-50 text-pink-600 border-pink-100" />
                       </div>
                     </motion.div>

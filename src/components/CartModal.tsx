@@ -13,8 +13,8 @@ export const CartModal = () => {
     const handleSendToWhatsApp = () => {
         if (cart.length === 0) return;
         setSending(true);
-        const text = cart.map(item => `• ${item.name} — ${item.quantity} ${item.unit} (${item.price * item.quantity} сом)`).join("%0A");
-        const url = `https://wa.me🍅 *Заказ: fruktu.ovoshi.kg*%0A${text}%0A%0A💰 *Итого: ${totalPrice} сом*`;
+        const text = cart.map(item => `• ${item.name} — ${item.quantity} ${item.unit} x ${item.price} сом = *${item.price * item.quantity}* сом`).join("%0A");
+        const url = `https://wa.me/996222398828?text=🍅 *Заказ: fruktu.ovoshi.kg*%0A${text}%0A%0A💰 *Итого: ${totalPrice} сом*`;
         window.open(url, "_blank");
         setTimeout(() => {
             setSending(false);
