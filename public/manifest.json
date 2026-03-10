@@ -1,7 +1,7 @@
 {
-    "name": "Fruktu.kg",
+    "name": "Fruktu.ovoshi.kg",
     "short_name": "Fruktu",
-    "description": "Доставка свежих фруктов и овощей в Бишкеке",
+    "description": "Доставка свежих овощей и фруктов в Бишкеке",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
@@ -9,8 +9,15 @@
     "icons": [
         {
             "src": "/image.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/image.png",
             "sizes": "512x512",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any maskable"
         }
     ]
 }

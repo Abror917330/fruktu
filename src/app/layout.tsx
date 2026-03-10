@@ -1,8 +1,14 @@
 import { Navbar } from "@/components/Layout/Navbar";
 import { BottomNav } from "@/components/Layout/BottomNav";
-import { CartModal } from "@/components/CartModal"; // Yo'lga e'tibor bering
+import { CartModal } from "@/components/CartModal";
 import { InstallPWA } from "@/components/Layout/InstallPWA";
 import "./globals.css";
+
+export const metadata = {
+  title: "Fruktu.kg - Доставка свежих овощей и фруктов",
+  description: "Самые свежие продукты в Бишкеке с доставкой до двери",
+  manifest: "/manifest.json",
+};
 
 export default function RootLayout({
   children,
@@ -11,7 +17,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru">
-      <body className="bg-slate-50 antialiased overflow-x-hidden italic-none">
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#10B981" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+      </head>
+      <body className="bg-slate-50 antialiased overflow-x-hidden">
         {/* TEPADAGI NAVBAR */}
         <Navbar />
 
@@ -20,7 +32,7 @@ export default function RootLayout({
           {children}
         </main>
 
-        {/* SAVATCHA MODALI (Har doim tayyor turadi, tugma bosilganda ochiladi) */}
+        {/* PWA VA SAVATCHA */}
         <InstallPWA />
         <CartModal />
 
