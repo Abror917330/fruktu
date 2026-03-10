@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/Layout/Navbar";
 import { BottomNav } from "@/components/Layout/BottomNav";
 import { CartModal } from "@/components/CartModal"; // Yo'lga e'tibor bering
+import { InstallPWA } from "@/components/Layout/InstallPWA";
 import "./globals.css";
 
 export default function RootLayout({
@@ -20,6 +21,7 @@ export default function RootLayout({
         </main>
 
         {/* SAVATCHA MODALI (Har doim tayyor turadi, tugma bosilganda ochiladi) */}
+        <InstallPWA />
         <CartModal />
 
         {/* PASTDAGI NAVIGATION */}

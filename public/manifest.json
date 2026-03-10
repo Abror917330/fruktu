@@ -1,0 +1,16 @@
+{
+    "name": "Fruktu.kg",
+    "short_name": "Fruktu",
+    "description": "Доставка свежих фруктов и овощей в Бишкеке",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#10B981",
+    "icons": [
+        {
+            "src": "/image.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

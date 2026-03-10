@@ -1,44 +1,49 @@
 import { create } from 'zustand';
 
 interface CartItem {
-  id: number;
+  id: number | string;
   name: string;
   price: number;
   quantity: number;
-  image: string;
   unit: string;
+  image: string;
 }
 
-interface AppState {
+interface CartStore {
   cart: CartItem[];
   isCartOpen: boolean;
   setCartOpen: (open: boolean) => void;
-  addToCart: (product: any) => void;
-  removeFromCart: (id: number) => void; // Mana shu funksiya xatolikni yo'qotadi
+  addToCart: (product: CartItem) => void;
+  removeFromCart: (id: number | string) => void;
   clearCart: () => void;
 }
 
-export const useStore = create<AppState>((set) => ({
+export const useStore = create<CartStore>((set) => ({
   cart: [],
   isCartOpen: false,
   setCartOpen: (open) => set({ isCartOpen: open }),
-  
+
   addToCart: (product) => set((state) => {
-    const exists = state.cart.find((item) => item.id === product.id);
-    if (exists) {
+    const existingItem = state.cart.find((item) => item.id === product.id);
+
+    if (existingItem) {
+      // MUHIM: Miqdorni (1.5 + 0.1 kabi) hisoblab, keyin JS xatosini yo'qotish uchun toFixed ishlatamiz
+      const newQuantity = Number((existingItem.quantity + product.quantity).toFixed(1));
+
       return {
         cart: state.cart.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          item.id === product.id
+            ? { ...item, quantity: newQuantity }
+            : item
         ),
       };
     }
-    return { cart: [...state.cart, { ...product, quantity: 1 }] };
+    // Yangi mahsulot bo'lsa
+    return { cart: [...state.cart, { ...product, quantity: Number(product.quantity.toFixed(1)) }] };
   }),
 
   removeFromCart: (id) => set((state) => ({
-    cart: state.cart
-      .map((item) => (item.id === id ? { ...item, quantity: item.quantity - 1 } : item))
-      .filter((item) => item.quantity > 0),
+    cart: state.cart.filter((item) => item.id !== id),
   })),
 
   clearCart: () => set({ cart: [] }),

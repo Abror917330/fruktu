@@ -1,91 +1,124 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Minus, Info, X } from "lucide-react";
+import { Plus, Minus, X, ShoppingBasket } from "lucide-react";
 import { useStore } from "@/store/useStore";
 import { useState } from "react";
 
 export const ProductCard = ({ product }: { product: any }) => {
   const [isModalOpen, setModalOpen] = useState(false);
+  const { addToCart } = useStore();
+
+  const imageUrl = product.image || "/placeholder.png";
+  const hasDiscount = product.old_price && product.old_price > product.price;
 
   return (
     <>
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        // h-[320px] - karta balandligini qat'iy belgilaymiz, shunda hamma bir xil turadi
-        className="bg-white rounded-[2.5rem] p-3 shadow-sm border border-gray-100 flex flex-col h-[320px] relative group overflow-hidden"
+        className="bg-white rounded-[2rem] p-3 shadow-sm border border-gray-100 flex flex-col h-[350px] relative"
       >
-        {/* 1. RASM QISMI (Qat'iy kvadrat) */}
-        <div className="relative aspect-square w-full rounded-[2rem] overflow-hidden bg-gray-50 shrink-0">
-          <img 
-            src={typeof product.image === 'string' ? product.image : product.image.src} 
-            alt={product.name} 
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+        {/* Rasm qismi */}
+        <div className="relative aspect-square w-full rounded-[1.6rem] overflow-hidden bg-gray-50 shrink-0">
+          <img
+            src={imageUrl}
+            alt={product.name}
+            className="w-full h-full object-cover transition-transform duration-500 active:scale-105"
           />
-          {product.price < 100 && (
-            <div className="absolute top-3 left-3 bg-brand-red text-white text-[8px] font-black px-2 py-1 rounded-full uppercase tracking-tighter shadow-lg shadow-red-500/20">
-              Hot Price
+          {hasDiscount && (
+            <div className="absolute top-2 right-2 bg-brand-red text-white text-[9px] font-black px-2.5 py-1 rounded-full shadow-md">
+              СКИДКА
             </div>
           )}
         </div>
 
-        {/* 2. MA'LUMOTLAR (Avtomatik oraliq bilan) */}
-        <div className="px-1 pt-3 pb-2 flex flex-col justify-between flex-grow">
-          <div>
-            <h4 className="text-[12px] font-black text-brand-dark leading-tight line-clamp-2 uppercase tracking-tighter italic h-[32px]">
+        {/* Ma'lumotlar qismi */}
+        <div className="px-1 pt-3 flex flex-col justify-between flex-grow">
+          <div className="space-y-1">
+            <h4 className="text-[13px] font-black text-brand-dark leading-tight line-clamp-2 uppercase italic tracking-tighter h-[34px]">
               {product.name}
             </h4>
-            <div className="flex items-baseline gap-1 mt-1">
-              <span className="text-xl font-black text-brand-green tracking-tighter">{product.price} сом</span>
-              <span className="text-[8px] font-bold text-gray-400 uppercase">/{product.unit}</span>
+
+            <div className="flex flex-col pt-1">
+              {hasDiscount ? (
+                <div className="flex flex-col">
+                  <span className="text-[11px] font-bold text-gray-400 line-through mb-1">
+                    {product.old_price} сом
+                  </span>
+                  <span className="text-xl font-black text-brand-red tracking-tighter leading-none">
+                    {product.price} <span className="text-[12px]">сом</span>
+                  </span>
+                </div>
+              ) : (
+                <span className="text-xl font-black text-brand-dark tracking-tighter leading-none">
+                  {product.price} <span className="text-[12px]">сом</span>
+                </span>
+              )}
+              <span className="text-[9px] font-bold text-brand-green uppercase tracking-widest mt-1">
+                за 1 {product.unit || 'кг'}
+              </span>
             </div>
           </div>
         </div>
 
-        {/* 3. TUGMA (Doim eng pastda) */}
-        <motion.button 
-          whileTap={{ scale: 0.95 }}
+        {/* Tugma - FAQAT Yashil, Oq va Qizil */}
+        <motion.button
+          whileTap={{ scale: 0.96 }}
           onClick={() => setModalOpen(true)}
-          className="w-full py-3.5 bg-brand-green/10 text-brand-green hover:bg-brand-green hover:text-white transition-all duration-300 rounded-[1.4rem] font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 shrink-0 border border-brand-green/5"
+          className="w-full py-4 mt-3 bg-brand-green text-white rounded-[1.4rem] font-black text-[10px] uppercase tracking-widest shadow-lg shadow-green-100 active:bg-brand-green/90 transition-all"
         >
-          <Info size={14} strokeWidth={3} /> Подробнее
+          <Plus size={16} strokeWidth={4} className="inline-block mr-1" /> Добавить
         </motion.button>
       </motion.div>
 
-      {/* MODAL OYNASI */}
+      {/* Modal - Ekranning qoq markazida */}
       <AnimatePresence>
         {isModalOpen && (
-          <div className="fixed inset-0 z-[200] flex items-center justify-center p-6">
-            <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          <div className="fixed inset-0 z-[500] flex items-center justify-center p-5">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               onClick={() => setModalOpen(false)}
               className="absolute inset-0 bg-brand-dark/60 backdrop-blur-md"
             />
-            
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="bg-white rounded-[3rem] p-8 w-full max-w-sm shadow-2xl relative z-10 flex flex-col items-center"
+
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: "spring", damping: 20, stiffness: 300 }}
+              className="bg-white rounded-[3rem] p-8 w-full max-w-sm shadow-2xl relative z-10 border-4 border-gray-50"
             >
-              <button onClick={() => setModalOpen(false)} className="absolute top-5 right-5 bg-gray-100 rounded-2xl p-2 text-gray-400">
+              <button
+                onClick={() => setModalOpen(false)}
+                className="absolute top-6 right-6 p-2 bg-gray-100 rounded-2xl text-gray-400 hover:text-brand-red transition-colors"
+              >
                 <X size={20} strokeWidth={3} />
               </button>
 
-              <div className="w-48 h-48 rounded-[2.5rem] overflow-hidden shadow-2xl mb-6 border-4 border-gray-50">
-                  <img src={typeof product.image === 'string' ? product.image : product.image.src} className="w-full h-full object-cover" alt={product.name} />
+              <div className="w-44 h-44 mx-auto rounded-[2.5rem] overflow-hidden mb-6 shadow-2xl border-4 border-white">
+                <img src={imageUrl} className="w-full h-full object-cover" alt="" />
               </div>
 
-              <h3 className="text-2xl font-black text-brand-dark mb-2 text-center uppercase tracking-tighter italic leading-none">
+              <div className="text-center mb-8">
+                <h3 className="text-2xl font-black text-brand-dark uppercase italic tracking-tighter leading-none mb-2">
                   {product.name}
-              </h3>
-              
-              <p className="text-[10px] text-brand-green font-black uppercase tracking-[0.2em] mb-8 italic">
-                  Свежий продукт
-              </p>
+                </h3>
+                <div className="flex items-center justify-center gap-3">
+                  <span className={`text-2xl font-black ${hasDiscount ? 'text-brand-red' : 'text-brand-dark'}`}>
+                    {product.price} сом
+                  </span>
+                  {hasDiscount && (
+                    <span className="text-sm font-bold text-gray-300 line-through">
+                      {product.old_price} сом
+                    </span>
+                  )}
+                </div>
+              </div>
 
-              <CounterSection product={product} onClose={() => setModalOpen(false)} />
+              <CounterSection product={product} onAdd={() => setModalOpen(false)} />
             </motion.div>
           </div>
         )}
@@ -94,44 +127,50 @@ export const ProductCard = ({ product }: { product: any }) => {
   );
 };
 
-// MODAL ICHIDAGI COUNTER QISMI
-const CounterSection = ({ product, onClose }: any) => {
+const CounterSection = ({ product, onAdd }: { product: any, onAdd: () => void }) => {
+  const isKg = product.unit === 'кг';
+  const step = isKg ? 0.1 : 1;
   const [qty, setQty] = useState(1);
   const { addToCart } = useStore();
-  const total = product.price * qty;
+
+  const total = Math.round(product.price * qty);
 
   return (
-    <div className="w-full space-y-8">
-      <div className="flex items-center justify-center gap-8 bg-gray-50 px-6 py-4 rounded-[2.2rem] border border-gray-100">
-        <motion.button 
+    <div className="w-full space-y-6">
+      <div className="flex items-center justify-between bg-gray-50 p-2 rounded-[2.2rem] border border-gray-100">
+        <motion.button
           whileTap={{ scale: 0.8 }}
-          onClick={() => setQty(q => Math.max(1, q - 1))} 
-          className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-brand-red font-black text-2xl border border-gray-100"
+          onClick={() => setQty(q => Math.max(step, Number((q - step).toFixed(1))))}
+          className="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center text-brand-red border border-gray-100"
         >
-          <Minus size={20} strokeWidth={4} />
+          <Minus size={22} strokeWidth={4} />
         </motion.button>
-        
-        <span className="font-black text-3xl text-brand-dark min-w-[40px] text-center tracking-tighter">{qty}</span>
-        
-        <motion.button 
+
+        <div className="text-center">
+          <span className="font-black text-3xl text-brand-dark leading-none">{qty}</span>
+          <p className="text-[10px] font-bold text-gray-400 uppercase mt-1 tracking-widest">
+            {isKg ? 'кг' : 'шт'}
+          </p>
+        </div>
+
+        <motion.button
           whileTap={{ scale: 0.8 }}
-          onClick={() => setQty(q => q + 1)} 
-          className="w-12 h-12 rounded-2xl bg-brand-green text-white shadow-lg shadow-green-200 flex items-center justify-center font-black text-2xl"
+          onClick={() => setQty(q => Number((q + step).toFixed(1)))}
+          className="w-14 h-14 rounded-2xl bg-brand-green text-white shadow-lg shadow-green-100 flex items-center justify-center"
         >
-          <Plus size={20} strokeWidth={4} />
+          <Plus size={22} strokeWidth={4} />
         </motion.button>
       </div>
 
       <motion.button
-        whileTap={{ scale: 0.95 }}
-        onClick={() => { 
-          addToCart({ ...product, quantity: qty }); 
-          onClose(); 
-        }}
-        className="w-full py-5 bg-brand-green text-white rounded-[2rem] font-black text-[11px] uppercase tracking-widest shadow-xl shadow-green-200 flex flex-col items-center justify-center leading-none gap-2"
+        whileTap={{ scale: 0.96 }}
+        onClick={() => { addToCart({ ...product, quantity: qty }); onAdd(); }}
+        className="w-full py-5 bg-brand-green text-white rounded-[2rem] font-black uppercase tracking-[0.2em] shadow-xl shadow-green-200 flex flex-col items-center leading-none gap-2"
       >
-        <span>Добавить в корзину</span>
-        <span className="text-white/70 italic text-[10px] lowercase tracking-normal">итого: {total} сом</span>
+        <span>В КОРЗИНУ</span>
+        <span className="text-[10px] font-bold text-white/70 italic tracking-normal">
+          итого: {total} сом
+        </span>
       </motion.button>
     </div>
   );
